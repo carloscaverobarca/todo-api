@@ -26,11 +26,17 @@ package com.example.todo;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.example.todo.oauth2.KeyCloakInterceptor;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -42,6 +48,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 public class TodoApplication extends SpringBootServletInitializer {
+
+	@Autowired
+	private KeyCloakInterceptor myKeyCloakInterceptor;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TodoApplication.class, args);
@@ -68,6 +77,22 @@ public class TodoApplication extends SpringBootServletInitializer {
                 new ArrayList<>());
         return apiInfo;
     }
+    
+    @Configuration
+    public class WebApplicationConfig extends WebMvcConfigurerAdapter {
+
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(myKeyCloakInterceptor).addPathPatterns("/**");;
+        }
+        
+        @Override
+        public void addViewControllers(ViewControllerRegistry registry) {
+            registry.addViewController("/notFound").setViewName("forward:/index.html");
+        }
+
+    }
+
 
 
 }

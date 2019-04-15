@@ -5,6 +5,12 @@ spring.datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:sampletest;MODE=MySQL
 
+keycloak:
+    url: https://keycloak.docker.atosresearch.eu/auth
+    realm: kibana
+    client_id: kibana
+    oauth: true
+
 ---
 spring:
   profiles: test
@@ -12,6 +18,12 @@ spring:
 spring.jpa:
     hibernate:
       ddl-auto: create-drop
+
+keycloak:
+    url: https://keycloak.docker.atosresearch.eu/auth
+    realm: kibana
+    client_id: kibana
+    oauth: false
 
 ---
 spring:
@@ -27,3 +39,10 @@ spring.jpa:
   hibernate:
     dialect: org.hibernate.dialect.MySQLInnoDBDialect
     ddl-auto: update
+
+keycloak:
+    url: https://keycloak.docker.atosresearch.eu/auth
+    realm: kibana
+    client_id: kibana
+    oauth: true
+

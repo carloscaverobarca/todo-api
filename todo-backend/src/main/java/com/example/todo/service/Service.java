@@ -27,16 +27,20 @@ package com.example.todo.service;
 
 import java.util.List;
 
+import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.stereotype.Component;
 
 import com.example.todo.domain.Todo;
+import com.example.todo.exceptions.NotAuthorizedException;
+import com.example.todo.oauth2.KeyCloakUser;
 
 @Component
 public interface Service {
-	public List<Todo> getAllTodos();
-	public void saveTodo(Todo todo);
+	public List<Todo> getAllTodos(String token);
+	public void saveTodo(Todo todo, String token);
 	public void completeTodo(int id);
 	public Todo getTodoById(int id);
 	public void delete(int id);
+	public AccessTokenResponse login(KeyCloakUser user) throws NotAuthorizedException;
 }
 

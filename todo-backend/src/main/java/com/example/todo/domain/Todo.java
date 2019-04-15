@@ -40,6 +40,7 @@ public class Todo {
     private boolean complete = false;
     private Long start;
     private Long end;
+    private String userid;
     
 	public int getId() {
 		return id;
@@ -78,5 +79,13 @@ public class Todo {
 	
 	public void setEnd(Long end) {
 		this.end = end;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+	
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 }

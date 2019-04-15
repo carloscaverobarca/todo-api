@@ -26,6 +26,9 @@ package com.example.todo.controller;
 
 import java.util.List;
 
+import org.keycloak.representations.AccessTokenResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,40 +36,63 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
 
 import com.example.todo.domain.Todo;
+import com.example.todo.exceptions.NotAuthorizedException;
+import com.example.todo.oauth2.KeyCloakUser;
 import com.example.todo.service.Service;
 
 @RestController
 public class TodoController {
 
-    @Autowired
+	public static final Logger log = LoggerFactory.getLogger(TodoController.class);
+
+	@Autowired
     Service todoService;
 
-    @GetMapping("/todos")
-    private List<Todo> getAllTodos() {
-        return todoService.getAllTodos();
+	@PostMapping("/login")
+	public AccessTokenResponse login(@RequestBody KeyCloakUser user) 
+			throws NotAuthorizedException {
+		log.info("Login user");
+		return todoService.login(user);
+	}
+	
+	@GetMapping("/todos")
+    private List<Todo> getAllTodos(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
+    		throws NotAuthorizedException {
+		log.info("Get all todos");
+        return todoService.getAllTodos(token);
     }
 
     @GetMapping("/todos/{id}")
-    private Todo getTodo(@PathVariable("id") int id) {
+    private Todo getTodo(@PathVariable("id") int id, 
+    		@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
+    		throws NotAuthorizedException {
         return todoService.getTodoById(id);
     }
 
     @DeleteMapping("/todos/{id}")
-    private void delete(@PathVariable("id") int id) {
+    private void delete(@PathVariable("id") int id, 
+    		@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
+    		throws NotAuthorizedException {
         todoService.delete(id);
     }
 
     @PostMapping("/todos")
-    private int saveTodo(@RequestBody Todo todo) {
-        todoService.saveTodo(todo);
+    private int saveTodo(@RequestBody Todo todo, 
+    		@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
+    		throws NotAuthorizedException {
+        todoService.saveTodo(todo, token);
         return todo.getId();
     }
 
     @PutMapping("/todos/{id}")
-    private void complete(@PathVariable("id") int id) {
+    private void complete(@PathVariable("id") int id, 
+    		@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
+    		throws NotAuthorizedException {
         todoService.completeTodo(id);
     }
 }
