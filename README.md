@@ -13,6 +13,7 @@ TODO List
 - Eclipse.
 - Angular2.
 - Spring Boot REST API
+- Swagger
 
 # How to compile
 
@@ -24,7 +25,17 @@ It uses Manven and it includes a parent pom
 
 # How to deploy
 
+```
+	mvn spring-boot:run
+```
 
+Swagger can be accessed on:
+
+```
+	http://localhost:8080/swagger-ui.html
+```
+
+To accessed the REST API first call login function with user and password. Later on include in the Authorization Http Header with "BEARER <token>".
 
 # How to contribute
 
