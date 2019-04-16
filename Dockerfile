@@ -11,7 +11,6 @@ ADD todo-frontend/*.json /code/todo-frontend/
 ADD todo-frontend/*.conf.js /code/todo-frontend/
 ADD todo-frontend/src /code/todo-frontend/src
 ADD todo-frontend/e2e /code/todo-frontend/e2e
-RUN ["mvn", "dependency:resolve"]
 
 RUN ["mvn", "clean", "install"]
 
