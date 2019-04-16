@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   profiles: default 
 
@@ -6,10 +9,10 @@ spring.datasource:
     url: jdbc:h2:mem:sampletest;MODE=MySQL
 
 keycloak:
-    url: https://keycloak.docker.atosresearch.eu/auth
-    realm: kibana
-    client_id: kibana
-    oauth: true
+    url: ${KEYCLOAK_URL:http://keycloak:8080/auth}
+    realm: ${KEYCLOAK_REALM:test}
+    client_id: ${KEYCLOAK_CLIENT_ID:test}
+    oauth: ${KEYCLOAK_OAUTH:true}
 
 ---
 spring:
@@ -20,10 +23,10 @@ spring.jpa:
       ddl-auto: create-drop
 
 keycloak:
-    url: https://keycloak.docker.atosresearch.eu/auth
-    realm: kibana
-    client_id: kibana
-    oauth: false
+    url: ${KEYCLOAK_URL:http://keycloak:8080/auth}
+    realm: ${KEYCLOAK_REALM:test}
+    client_id: ${KEYCLOAK_CLIENT_ID:test}
+    oauth: ${KEYCLOAK_OAUTH:true}
 
 ---
 spring:
@@ -31,9 +34,9 @@ spring:
 
 spring.datasource:
   driverClassName: com.mysql.jdbc.Driver
-  url: jdbc:mysql://127.0.0.1/sampledev
-  username: sample
-  password: sample
+  url: jdbc:mysql://127.0.0.1/${MYSQL_TODO_DB:tododb}
+  username: ${MYSQL_TODO_USER:todo}
+  password: ${MYSQL_TODO_PASSWORD:todo}
 
 spring.jpa:
   hibernate:
@@ -41,8 +44,8 @@ spring.jpa:
     ddl-auto: update
 
 keycloak:
-    url: https://keycloak.docker.atosresearch.eu/auth
-    realm: kibana
-    client_id: kibana
-    oauth: true
+    url: ${KEYCLOAK_URL:http://keycloak:8080/auth}
+    realm: ${KEYCLOAK_REALM:test}
+    client_id: ${KEYCLOAK_CLIENT_ID:test}
+    oauth: ${KEYCLOAK_OAUTH:true}
 

@@ -71,7 +71,8 @@ public class KeyCloakInterceptor extends HandlerInterceptorAdapter {
         if (Boolean.valueOf(oauth) == false)
         	return true;
         
-        if ("/login".equalsIgnoreCase(resourcePath) == true || 
+        if ("/login".equalsIgnoreCase(resourcePath) == true ||
+        	"/sigin".equalsIgnoreCase(resourcePath) == true ||	
         	"/error".equalsIgnoreCase(resourcePath) == true	|| 
         	resourcePath.contains("swagger"))
         	return true;

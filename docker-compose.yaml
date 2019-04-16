@@ -1,0 +1,139 @@
+# === Copyright
+#
+# Copyright (C) 2019  Carlos Cavero. All rights reserved.
+#
+# === License
+#
+# docker-compose.yaml is free software: you can redistribute it and/or modify it under the 
+# terms of the Apache License, Version 2.0 (the License);
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# The software is provided "AS IS", without any warranty of any kind, express or implied,
+# including but not limited to the warranties of merchantability, fitness for a particular
+# purpose and noninfringement, in no event shall the authors or copyright holders be 
+# liable for any claim, damages or other liability, whether in action of contract, tort or
+# otherwise, arising from, out of or in connection with the software or the use or other
+# dealings in the software.
+# 
+# See README file for the full disclaimer information and LICENSE file for full license 
+# information in the project root.
+# 
+# == docker-compose.yml
+#
+# Service composition to deploy the microservices architecture with nginx, keycloak and TODO REST API
+#
+# === Authors
+#
+# Author	Carlos Cavero
+# 
+
+version: '3'
+
+services:
+# The reverse proxy providing https and redirecting to the rest of the services
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+#    labels:
+#      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    volumes:
+#      - certs:/etc/nginx/certs
+#      - vhost.d:/etc/nginx/vhost.d
+#      - nginx:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    network_mode: host
+    ports:
+#      - 443:443
+      - 80:80
+    restart: always
+#  letsencrypt-nginx-proxy-companion:
+#    image: jrcs/letsencrypt-nginx-proxy-companion:v1.9.1
+#    depends_on:
+#      - nginx-proxy
+#    volumes:
+#      - certs:/etc/nginx/certs
+#      - vhost.d:/etc/nginx/vhost.d
+#      - nginx:/usr/share/nginx/html
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+# MySQL database for KeyCloak
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - ${CONFIG_FOLDER}/mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+        test: ["CMD-SHELL", "mysqladmin -h 'localhost' -u root -p${MYSQL_ROOT_PASSWORD} ping --silent"]
+        interval: 30s
+        timeout: 30s
+        retries: 3
+    restart: always
+  mysql-todo:
+    image: mysql:5.7
+    container_name: mysql-todo
+    volumes:
+      - ${CONFIG_FOLDER}/mysql-todo/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_TODO_DB}
+      MYSQL_USER: ${MYSQL_TODO_USER}
+      MYSQL_PASSWORD: ${MYSQL_TODO_PASSWORD}
+    healthcheck:
+        test: ["CMD-SHELL", "mysqladmin -h 'localhost' -u root -p${MYSQL_ROOT_PASSWORD} ping --silent"]
+        interval: 30s
+        timeout: 30s
+        retries: 3
+    restart: always
+# KeyCloak IdM configured for MySQL
+  keycloak:
+    image: jboss/keycloak
+    container_name: keycloak
+    environment:
+      PROXY_ADDRESS_FORWARDING: ${PROXY_ADDRESS_FORWARDING}
+      VIRTUAL_HOST: ${KEYCLOAK_VIRTUAL_HOST}
+      DB_VENDOR: ${MYSQL_VENDOR}
+      DB_ADDR: ${MYSQL_ADDR}
+      DB_DATABASE: ${MYSQL_DB}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      JDBC_PARAMS: "useSSL=false"
+# Configuration for 3.4.3
+      MYSQL_PORT_3306_TCP_ADDR: ${MYSQL_TCP_ADDR}
+      MYSQL_PORT_3306_TCP_PORT: ${MYSQL_TCP_PORT}
+    ports:
+      - 8080:8080
+    depends_on:
+      mysql:
+          condition: service_healthy
+    depends_on:
+      - mysql
+    restart: always
+# Todo service
+  todo-api:
+    container_name: todo-api
+    build: .
+    depends_on:
+      mysql-todo:
+          condition: service_healthy
+    environment:
+      PROXY_ADDRESS_FORWARDING: ${PROXY_ADDRESS_FORWARDING}
+      VIRTUAL_HOST: ${TODO_VIRTUAL_HOST}
+      MYSQL_DATABASE: ${MYSQL_TODO_DB}
+      MYSQL_USER: ${MYSQL_TODO_USER}
+      MYSQL_PASSWORD: ${MYSQL_TODO_PASSWORD}
+      KEYCLOAK_AUTH: ${KEYCLOAK_AUTH}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_OAUTH: ${KEYCLOAK_OAUTH}
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql-todo
+    restart: always
