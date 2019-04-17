@@ -6,11 +6,11 @@ The software allows managing a TODO list of tasks secured by user/password. It a
 
 # Description
 
-TODO List software prepared for production with the following architecture (letsencrypt for https). The repository includes a token-based backend to provide the functionality but also a ready-for-production deployment. An angular application adapted [from this SitePoint example](https://www.sitepoint.com/angular-2-tutorial/) is used with to access the API REST. A login page has been implemented to validate through the Identity Management (KeyCloak):
+The TODO List software is prepared for production with the following architecture (letsencrypt for https). The repository includes a token-based backend to provide the functionality but also a ready-for-production deployment. An angular application adapted [from this SitePoint example](https://www.sitepoint.com/angular-2-tutorial/) is used to access the API REST. A login page has been implemented to validate through the Identity Management (KeyCloak):
 
 ![Diagram](img/nginx-proxy-angular.jpg)
 
-Nginx is used as reverse proxy. For the test port 80 and simple names are used: keycloak, todo-api and todo-ui. For production the port must be changed to 443 and include suitable domains. Files to be changed for configuration purposes:
+Nginx is used as reverse proxy. For testing, port 80 and simple names are used: keycloak, todo-api and todo-ui. For production the port must be changed to 443, letsencrypt to provide the certs including suitable domains. There are several files to be changed for configuration purposes:
 - Change acordingly the .env file before deploying the docker-compose.
 - Check the resources/application.yml from the Spring REST API
 - Check the src/environment/environment.ts (and environment-prod.ts) files for the Angular connection to REST API
