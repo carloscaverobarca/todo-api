@@ -118,7 +118,7 @@ services:
 # Todo service
   todo-api:
     container_name: todo-api
-    build: .
+    build: ./todo-backend
     depends_on:
       mysql-todo:
           condition: service_healthy
@@ -136,4 +136,26 @@ services:
       - 8081:8081
     depends_on:
       - mysql-todo
+    restart: always
+# Todo service
+  todo-ui:
+    container_name: todo-ui
+    build: ./todo-frontend
+    depends_on:
+      todo-api:
+          condition: service_healthy
+    environment:
+      PROXY_ADDRESS_FORWARDING: ${PROXY_ADDRESS_FORWARDING}
+      VIRTUAL_HOST: ${TODOUI_VIRTUAL_HOST}
+      MYSQL_DATABASE: ${MYSQL_TODO_DB}
+      MYSQL_USER: ${MYSQL_TODO_USER}
+      MYSQL_PASSWORD: ${MYSQL_TODO_PASSWORD}
+      KEYCLOAK_AUTH: ${KEYCLOAK_AUTH}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_OAUTH: ${KEYCLOAK_OAUTH}
+    ports:
+      - 8082:8082
+    depends_on:
+      - todo-api
     restart: always

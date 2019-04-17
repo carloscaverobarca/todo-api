@@ -1,0 +1,30 @@
+<div class="card card-block card-header wrapper">
+    <div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div style="float: left;">&nbsp;&nbsp;&nbsp;&nbsp;TODO Project         
+        </div>
+        <div style="float: right;">
+            <button type="button" class="btn btn-light btn-sm" style="visibility:hidden">Invisible</button>
+            <a i18n href='mailto:cavero.carlos@gmail.com?Subject=Spring boot TODO API' target="_blank">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+    </div>
+</div>
+
+<h1 i18n class="center">TODO List</h1>
+
+<form>
+    <div class="form-group">
+        <label i18n for="userInput">User</label>
+        <input i18n-placeholder type="text" class="form-control" id="userInput" [(ngModel)]="userName" placeholder="User name" name="userName" appAutofocus/>
+    </div>
+    <div class="form-group">
+        <label i18n for="userPassword">Password</label>
+        <input i18n-placeholder type="password" class="form-control" id="userPassword" [(ngModel)]="userPassword" placeholder="Password" name="userPassword" />
+    </div>
+    <button i18n type="submit" class="btn btn-default" (click)="login()">Sign in</button>
+    <!-- <div *ngIf="authError">
+        <ngb-alert type='danger' (close)="closeAlert()">Authentication failed! ({{loginStatus}})</ngb-alert>
+    </div> -->
+</form>
+
+<!-- <app-footer></app-footer> --> 

@@ -1,0 +1,29 @@
+<div class="card card-block card-header wrapper">
+    <div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div style="float: left;">&nbsp;&nbsp;&nbsp;&nbsp;TODO Project         
+        </div>
+        <div style="float: right;">
+            <button type="button" class="btn btn-light btn-sm" style="visibility:hidden">Invisible</button>
+            <a i18n href='mailto:cavero.carlos@gmail.com?Subject=Spring boot TODO API' target="_blank">Contact</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+
+  <section class="todoapp">
+    <app-todo-list-header
+      (add)="onAddTodo($event)"
+    ></app-todo-list-header>
+    <app-todo-list
+      [todos]="todos"
+      (toggleComplete)="onToggleTodoComplete($event)"
+      (remove)="onRemoveTodo($event)"
+    ></app-todo-list>
+    <app-todo-list-footer
+      [todos]="todos"
+    ></app-todo-list-footer>
+  </section>
+</div>
+

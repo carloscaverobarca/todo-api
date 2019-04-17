@@ -1,0 +1,49 @@
+
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.css";
+
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+div.center {
+    display: inline-block;
+}
+
+form {
+    width: 30%;
+    min-width: 300px;
+    margin: 0 auto;
+    padding: 10px;
+    display: block;
+}
+
+.wrapper {
+    padding: 4px;
+    margin-bottom: 70px;
+    border-radius: 25px;
+    border: 2px solid #006b8c;
+    padding: 10px;
+}
+
+app-footer {
+    position: absolute;
+    bottom: 10px;
+    width: 90%;
+    height: 30px;
+}
+
+button {
+    margin-bottom: 10px;
+}
+
+ngb-alert {
+    font-size: smaller;
+    margin-top: 4px;
+}

@@ -1,0 +1,17 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+/test-output/
+/target/
+/bin/
+/.settings/
+*.class
+*.jar
+*.log
+.classpath
+.project
+*_dev
+
+# Angular static part
+
+/src/main/resources/static/
+

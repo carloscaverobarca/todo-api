@@ -3,12 +3,12 @@ import { TodoDataService } from './todo-data.service';
 import { Todo } from './todo';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'todo-root',
+  templateUrl: './todo.component.html',
+  styleUrls: ['./todo.component.css'],
   providers: [TodoDataService]
 })
-export class AppComponent implements OnInit {
+export class TodoComponent implements OnInit {
 
   todos: Todo[] = [];
 

@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Todo } from './todo';
 import { ApiService } from './api.service';
+
+import { Http, Headers } from '@angular/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+
+import { UserCommunicationService } from './user-communication.service';
+import { User } from './data-model/user';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class TodoDataService {
