@@ -2,14 +2,22 @@
 
 # Context
 
-Manage TODO list of tasks
+The software allows managing a TODO list of tasks secured by user/password. It also allows completing and removing the activities already done. 
 
 # Description
 
-TODO List prepared for production with the following architecture (letsencrypt for https):
+TODO List software prepared for production with the following architecture (letsencrypt for https). The repository includes a token-based backend to provide the functionality but also a ready-for-production deployment. An angular application adapted [from this SitePoint example](https://www.sitepoint.com/angular-2-tutorial/) is used with to access the API REST. A login page has been implemented to validate through the Identity Management (KeyCloak):
 
 ![Diagram](img/nginx-proxy-angular.jpg)
 
+Nginx is used as reverse proxy. For the test port 80 and simple names are used: keycloak, todo-api and todo-ui. For production the port must be changed to 443 and include suitable domains. Files to be changed for configuration purposes:
+- Change acordingly the .env file before deploying the docker-compose.
+- Check the resources/application.yml from the Spring REST API
+- Check the src/environment/environment.ts (and environment-prod.ts) files for the Angular connection to REST API
+- To avoid CORS (see below) modify the file 
+```
+    todo-backend/src/java/main/src/com/example/todo/controller/TodoController.java 
+```
 
 # Technologies
 
@@ -18,27 +26,51 @@ TODO List prepared for production with the following architecture (letsencrypt f
 - Spring Boot REST API
 - Swagger
 - KeyCloak
+- MySQL
 - Nginx as reverse proxy and letsencrypt
 
 Spring profiles have been used to differentiate between test and production. Run:
 ```
 	mvn spring-boot:run -Dspring.profiles.active=local
 ```
+to deploy a MySQL database for persistence storage.
 
 # How to compile
 
-It uses Manven and it includes a parent pom
+To compile the backend API REST Maven is used
 
 ```
+	cd todo-backend/
+	mvn clean install
+```
+
+The same to compile the angular frontend. Maven parent is used:
+
+```
+	cd todo-frontend/
 	mvn clean install
 ```
 
 # How to deploy
 
-Deploy directly the Spring application:
+Deploy directly the Spring API REST application:
 
 ```
+	cd todo-backend/
 	mvn spring-boot:run
+```
+
+**IMPORTANT** To avoid CORS error between the frontend and the backend modify the controller/TodoController.java before compiling including the following:
+```
+   @CrossOrigin(origins = "<frontend url>", maxAge = 3600)
+   public class TodoController
+```
+
+Deploy directly the angular frontend:
+```
+	cd todo-frontend/
+	mvn clean install
+	java -jar todo-frontend/todo-frontend-spring/target/todo-frontend-0.0.1-SNAPSHOT.jar
 ```
 
 Deploy using docker-compose:
@@ -51,20 +83,29 @@ Launch the containers (dettached)
 docker-compose up -d
 ```
 
-Swagger can be accessed on:
+# How to use
+
+API REST Swagger can be accessed on:
 
 ```
 	http://localhost:8081/swagger-ui.html
 ```
 
-To accesse the REST API first call login function with user and password. Later on include it in the Authorization Http Header with "BEARER <token>".
+Generate the token with the login function and include the Authorization Http Header with "BEARER <token>" in the rest of the calls.
 
-**IMPORTANT!** Create a realm "test", with a client id "test" in KeyCloak. Create a user in the new realm for testing.
+Angular frontend can be accessed through:
 ```
-	http://localhost:8080/
+	http://localhost:8082/
 ```
 
-The nginx reverse proxy allows also accessing using domains: todo and keycloak.
+You need to validate with user and password. 
+
+**IMPORTANT!** Login to KeyCloak (See the .env file -> user: admin password: Pa55w0rd). Create a realm "test", with a client id "test" in KeyCloak. Be sure to fill in Valid Redirect URI to http://localhost:8080/* (or http://keycloak/*). Create a user in the new realm for testing, for instance (test).
+```
+	http://localhost:8080/ (or http://keycloak/)
+```
+
+The nginx reverse proxy allows also accessing using domains: todo-api, todo-ui and keycloak (if you redirect the domains to localhost or the IP where you are deploying the containers).
 
 # How to contribute
 
