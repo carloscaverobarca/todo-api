@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2018  Atos Spain SA. All rights reserved.
+ * Copyright (C) 2019  Carlos Cavero. All rights reserved.
  * 
- * This file is part of the hapi-fhir-jpaserver-example-mysql-oauth.
+ * This file is part of the todo-api.
  * 
  * KeyCloakInterceptor.java is free software: you can redistribute it and/or modify it under the 
  * terms of the Apache License, Version 2.0 (the License);
@@ -19,8 +19,6 @@
  * information in the project root.
  * 
  * @author	Carlos Cavero
- *			Atos Research and Innovation, Atos SPAIN SA
- *			e-mail carlos.cavero@atos.net 
  * 
  * Interceptor which checks the authenticity of the KeyCloak token in the header
  */

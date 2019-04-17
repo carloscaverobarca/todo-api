@@ -41,6 +41,6 @@ public interface Service {
 	public void completeTodo(int id);
 	public Todo getTodoById(int id);
 	public void delete(int id);
-	public AccessTokenResponse login(KeyCloakUser user) throws NotAuthorizedException;
+	public String login(KeyCloakUser user) throws NotAuthorizedException;
 }
 

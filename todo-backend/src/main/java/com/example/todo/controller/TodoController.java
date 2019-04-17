@@ -30,6 +30,7 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,10 @@ import com.example.todo.oauth2.KeyCloakUser;
 import com.example.todo.service.Service;
 
 @RestController
+//Cross origin allowed for local testing on 4200 port
+// @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+// @CrossOrigin(origins = "http://localhost:8082", maxAge = 3600)
+@CrossOrigin(origins = "http://todo-ui", maxAge = 3600)
 public class TodoController {
 
 	public static final Logger log = LoggerFactory.getLogger(TodoController.class);
@@ -54,7 +59,7 @@ public class TodoController {
     Service todoService;
 
 	@PostMapping("/login")
-	public AccessTokenResponse login(@RequestBody KeyCloakUser user) 
+	public String login(@RequestBody KeyCloakUser user) 
 			throws NotAuthorizedException {
 		log.info("Login user");
 		return todoService.login(user);

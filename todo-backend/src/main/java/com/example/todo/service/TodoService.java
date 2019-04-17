@@ -87,7 +87,7 @@ public class TodoService implements Service {
     }
 
 	@Override
-	public AccessTokenResponse login(KeyCloakUser user) throws NotAuthorizedException {
+	public String login(KeyCloakUser user) throws NotAuthorizedException {
 		AccessTokenResponse accessToken = null;
 
 		try {
@@ -107,6 +107,6 @@ public class TodoService implements Service {
     		log.debug(ex.toString());
     		throw new NotAuthorizedException("Unauthorised access to protected resource");
 		}
-		return accessToken;
+		return accessToken.getToken();
 	}
 }
