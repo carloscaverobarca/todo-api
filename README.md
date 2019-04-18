@@ -4,7 +4,8 @@
 
 # Context
 
-The software allows managing a TODO list of tasks secured by user/password. It also allows completing and removing the activities already done. 
+The software allows managing a TODO list of tasks secured by user/password. It also allows completing and removing the activities already done. It includes
+Travis CI and Codecov.
 
 # Description
 
