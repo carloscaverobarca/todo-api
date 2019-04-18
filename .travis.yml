@@ -3,7 +3,7 @@ language: java
 sudo: false # faster builds
 
 script:
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then maven clean install; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then mvn clean install; fi
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
