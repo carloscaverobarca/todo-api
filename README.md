@@ -1,5 +1,7 @@
 # todo-api
 
+[![Build Status](https://travis-ci.org/carloscaverobarca/todo-api.svg?branch=master)](https://travis-ci.org/carloscaverobarca/todo-api) [![codecov.io](https://codecov.io/gh/carloscaverobarca/todo-api/branch/master/graphs/badge.svg)](http://codecov.io/gh/carloscaverobarca/todo-api)
+
 # Context
 
 The software allows managing a TODO list of tasks secured by user/password. It also allows completing and removing the activities already done. 
@@ -8,7 +10,9 @@ The software allows managing a TODO list of tasks secured by user/password. It a
 
 The TODO List software is prepared for production with the following architecture (letsencrypt for https). The repository includes a token-based backend to provide the functionality but also a ready-for-production deployment. An angular application adapted [from this SitePoint example](https://www.sitepoint.com/angular-2-tutorial/) is used to access the API REST. A login page has been implemented to validate through the Identity Management (KeyCloak):
 
-![Diagram](img/nginx-proxy-angular.jpg)
+<p align="center">
+	<img width="460" height="300" src="img/nginx-proxy-angular.jpg">
+</p>
 
 Nginx is used as reverse proxy. For testing, port 80 and simple names are used: keycloak, todo-api and todo-ui. For production the port must be changed to 443, letsencrypt to provide the certs including suitable domains. There are several files to be changed for configuration purposes:
 - Change acordingly the .env file before deploying the docker-compose.
