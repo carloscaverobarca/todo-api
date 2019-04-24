@@ -23,7 +23,7 @@ spring.jpa:
       ddl-auto: create-drop
 
 keycloak:
-    url: ${KEYCLOAK_URL:http://keycloak:8080/auth}
+    url: ${KEYCLOAK_URL:http://localhost:8080/auth}
     realm: ${KEYCLOAK_REALM:test}
     client_id: ${KEYCLOAK_CLIENT_ID:test}
     oauth: ${KEYCLOAK_OAUTH:true}
