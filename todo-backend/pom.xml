@@ -37,6 +37,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- Persistence Layer -->
 		<dependency>
 			<groupId>mysql</groupId>

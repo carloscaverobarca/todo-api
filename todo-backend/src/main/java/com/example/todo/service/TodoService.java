@@ -35,7 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.todo.controller.TodoController;
 import com.example.todo.domain.Todo;
@@ -60,6 +65,8 @@ public class TodoService implements Service {
 	
 	@Autowired
     TodoRepository todoRepository;
+	
+	RestTemplate restTemplate = new RestTemplate();
 
     public List<Todo> getAllTodos(String token) {
         List<Todo> todos = new ArrayList<Todo>();
@@ -101,12 +108,39 @@ public class TodoService implements Service {
 		            .clientId(keycloak_client_id)
 		            .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build())
 		            .build();
-
+		    
 			accessToken = keycloak.tokenManager().getAccessToken();
 		} catch (Exception ex) {
-    		log.debug(ex.toString());
+    		log.error(ex.toString());
     		throw new NotAuthorizedException("Unauthorised access to protected resource");
 		}
 		return accessToken.getToken();
+	}
+
+	@Override
+	public String userInfo(String authToken) throws NotAuthorizedException {
+        
+        HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + authToken);
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		
+		log.info("URL :" + keycloak_url + "/realms/" + 
+			keycloak_realm + "/protocol/openid-connect/userinfo");
+		
+		ResponseEntity<String> response = restTemplate.exchange(keycloak_url + "/realms/" + 
+			keycloak_realm + "/protocol/openid-connect/userinfo", 
+			HttpMethod.POST, entity, String.class);
+
+   		if (response.getStatusCode().value() != 200) {
+            log.error("OAuth2 Authentication failure. Invalid OAuth Token supplied in Authorization Header on Request.");
+    		throw new NotAuthorizedException("OAuth2 Authentication failure. "
+    				+ "Invalid OAuth Token supplied in Authorization Header on Request.");
+        }
+   		
+   		return "OK";
+	}
+	
+	public void setRestTemplate(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 	}
 }

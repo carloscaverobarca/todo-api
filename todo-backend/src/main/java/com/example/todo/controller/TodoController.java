@@ -65,6 +65,13 @@ public class TodoController {
 		return todoService.login(user);
 	}
 	
+	@GetMapping("/userinfo")
+	public String userInfo(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
+			throws NotAuthorizedException {
+		log.info("Get User info");
+		return todoService.userInfo(token);
+	}
+	
 	@GetMapping("/todos")
     private List<Todo> getAllTodos(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) 
     		throws NotAuthorizedException {
